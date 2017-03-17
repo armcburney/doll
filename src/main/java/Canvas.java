@@ -17,83 +17,81 @@ import javax.swing.JPanel;
 
 /**
  * A canvas that draws sprites.
- * 
- * Michael Terry & Jeff Avery
  */
 public class Canvas extends JPanel {
+  private Vector<Sprite> sprites = new Vector<Sprite>();
+  private Sprite interactiveSprite = null;
 
-	private Vector<Sprite> sprites = new Vector<Sprite>(); // All sprites we're managing
-	private Sprite interactiveSprite = null; // Sprite with which user is interacting
+  public Canvas() {
+    this.addMouseListener(new MouseAdapter() {
+      public void mousePressed(java.awt.event.MouseEvent e) {
+        handleMousePress(e);
+      }
 
-	public Canvas() {
-		// Install our event handlers
-		this.addMouseListener(new MouseAdapter() {
-			public void mousePressed(java.awt.event.MouseEvent e) {
-				handleMousePress(e);
-			}
+      public void mouseReleased(MouseEvent e) {
+        handleMouseReleased(e);
+      }
+    });
 
-			public void mouseReleased(MouseEvent e) {
-				handleMouseReleased(e);
-			}
-		});
-		this.addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseDragged(MouseEvent e) {
-				handleMouseDragged(e);
-			}
-		});
-	}
+    this.addMouseMotionListener(new MouseMotionAdapter() {
+      public void mouseDragged(MouseEvent e) {
+        handleMouseDragged(e);
+      }
+    });
+  }
 
-	/**
-	 * Handle mouse press events
-	 */
-	private void handleMousePress(java.awt.event.MouseEvent e) {
-		for (Sprite sprite : sprites) {
-			interactiveSprite = sprite.getSpriteHit(e);
-			if (interactiveSprite != null) {
-				interactiveSprite.handleMouseDownEvent(e);
-				break;
-			} 
-		}
-	}
+  /**
+   * Handle mouse press events
+   */
+  private void handleMousePress(java.awt.event.MouseEvent e) {
+    for (Sprite sprite : sprites) {
+      interactiveSprite = sprite.getSpriteHit(e);
 
-	/**
-	 * Handle mouse released events
-	 */
-	private void handleMouseReleased(MouseEvent e) {
-		if (interactiveSprite != null) {
-			interactiveSprite.handleMouseUp(e);
-			repaint();
-		}
-		interactiveSprite = null;
-	}
+      if (interactiveSprite != null) {
+        interactiveSprite.handleMouseDownEvent(e);
+        break;
+      }
+    }
+  }
 
-	/**
-	 * Handle mouse dragged events
-	 */
-	private void handleMouseDragged(MouseEvent e) {
-		if (interactiveSprite != null) {
-			interactiveSprite.handleMouseDragEvent(e);
-			repaint();
-		}
-	}
+  /**
+   * Handle mouse released events
+   */
+  private void handleMouseReleased(MouseEvent e) {
+    if (interactiveSprite != null) {
+      interactiveSprite.handleMouseUp(e);
+      repaint();
+    }
+    interactiveSprite = null;
+  }
 
-	/**
-	 * Add a top-level sprite to the canvas
-	 */
-	public void addSprite(Sprite s) {
-		sprites.add(s);
-	}
+  /**
+   * Handle mouse dragged events
+   */
+  private void handleMouseDragged(MouseEvent e) {
+    if (interactiveSprite != null) {
+      interactiveSprite.handleMouseDragEvent(e);
+      repaint();
+    }
+  }
 
-	/**
-	 * Paint our canvas
-	 */
-	public void paint(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.setColor(Color.BLACK);
-		for (Sprite sprite : sprites) {
-			sprite.draw((Graphics2D) g);
-		}
-	}
+  /**
+   * Add a top-level sprite to the canvas
+   */
+  public void addSprite(Sprite s) {
+    sprites.add(s);
+  }
 
+  /**
+   * Paint our canvas
+   */
+  public void paint(Graphics g) {
+    g.setColor(Color.WHITE);
+    g.fillRect(0, 0, this.getWidth(), this.getHeight());
+    g.setColor(Color.BLACK);
+
+    for (Sprite sprite : sprites) {
+      sprite.draw((Graphics2D) g);
+    }
+  }
 }
