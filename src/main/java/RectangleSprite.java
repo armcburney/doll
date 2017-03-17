@@ -1,5 +1,5 @@
 /**
- *
+ * Created by andrewmcburney on 2017-03-08.
  */
 
 package ca.andrewmcburney.cs349.a3;
@@ -16,14 +16,16 @@ import java.awt.geom.Rectangle2D;
  */
 public class RectangleSprite extends Sprite {
   private Rectangle2D rect = null;
+  private Color color;
 
   /**
    * Creates a rectangle based at the origin with the specified
-   * width and height
+   * width, height, and color
    */
-  public RectangleSprite(int width, int height) {
+  public RectangleSprite(int width, int height, Color color) {
     super();
     this.initialize(width, height);
+    this.color = color;
   }
 
   /**
@@ -58,7 +60,7 @@ public class RectangleSprite extends Sprite {
   }
 
   protected void drawSprite(Graphics2D g) {
-    g.setColor(Color.BLACK);
+    g.setColor(color);
     g.draw(rect);
   }
 

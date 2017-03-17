@@ -10,11 +10,11 @@ import javax.swing.JFrame;
 
 public class Main {
   public static void main(String[] args) {
-    // add scene graph to the canvas
+    // Add scene graph to the canvas
     Canvas canvas = new Canvas();
     canvas.addSprite(Main.makeSprite());
 
-    // create a frame to hold it
+    // Create a frame to hold scene graph
     JFrame frame = new JFrame();
     frame.getContentPane().add(canvas);
     frame.getContentPane().setLayout(new GridLayout(1, 1));
@@ -22,6 +22,8 @@ public class Main {
     // Set frame to not be resizable
     frame.setMinimumSize(new Dimension(1280, 800));
     frame.setMaximumSize(new Dimension(1280, 800));
+
+    // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
   }
@@ -30,25 +32,45 @@ public class Main {
    * Make sample scene graph for testing purposes.
    */
   private static Sprite makeSprite() {
-    // create four different parts
-    Sprite firstSprite = new RectangleSprite(80, 50);
-    Sprite secondSprite = new RectangleSprite(50, 40);
-    Sprite thirdSprite = new RectangleSprite(70, 30);
-    Sprite fourthSprite = new RectangleSprite(10, 10);
+    Sprite torso = new RectangleSprite(TORSO_WIDTH, TORSO_HEIGHT, Color.BLUE);
+    Sprite head = new RectangleSprite(HEAD_WIDTH, HEAD_HEIGHT, Color.GREEN);
+
+    // Left arm
+    Sprite leftHand = new RectangleSprite(50, 50, Color.BLACK);
+    Sprite leftUpperArm = new RectangleSprite(50, 50, Color.BLACK);
+    Sprite leftLowerArm = new RectangleSprite(70, 30, Color.BLACK);
+
+    // Right arm
+    Sprite rightHand = new RectangleSprite(50, 40, Color.BLACK);
+    Sprite rightUpperArm = new RectangleSprite(50, 50, Color.BLACK);
+    Sprite rightLowerArm = new RectangleSprite(70, 30, Color.BLACK);
 
     // define them based on relative, successive transformations
-    firstSprite.transform(AffineTransform.getTranslateInstance(0, 25));
-    secondSprite.transform(AffineTransform.getTranslateInstance(80, 5));
-    thirdSprite.transform(AffineTransform.getTranslateInstance(50, 5));
-    fourthSprite.transform(AffineTransform.getTranslateInstance(70, 30));
-    fourthSprite.transform(AffineTransform.getScaleInstance(4, 3));
+    torso.transform(AffineTransform.getTranslateInstance(100, 100));
+    head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH)/2, -10));
+    rightUpperArm.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH, TORSO_HEIGHT/5));
+
+    // left arm
+    leftLowerArm.addChild(leftHand);
+    leftUpperArm.addChild(leftLowerArm);
+
+    // right arm
+    rightLowerArm.addChild(rightHand);
+    rightUpperArm.addChild(rightLowerArm);
 
     // build scene graph
-    firstSprite.addChild(secondSprite);
-    secondSprite.addChild(thirdSprite);
-    thirdSprite.addChild(fourthSprite);
+    torso.addChild(head);
+    torso.addChild(leftUpperArm);
+    torso.addChild(rightUpperArm);
 
     // return root of the tree
-    return firstSprite;
+    return torso;
   }
+
+  // Scene graph node widths and heights
+  public static final int HEAD_WIDTH = 10;
+  public static final int HEAD_HEIGHT = 10;
+  public static final int TORSO_WIDTH = 100;
+  public static final int TORSO_HEIGHT = 100;
+
 }
