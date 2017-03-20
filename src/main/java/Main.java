@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.JFrame;
 
 public class Main {
+
   public static void main(String[] args) {
     // Add scene graph to the canvas
     Canvas canvas = new Canvas();
@@ -32,28 +33,34 @@ public class Main {
    * Make sample scene graph for testing purposes.
    */
   private static Section makeSection() {
-    Section torso = new BodySection(TORSO_WIDTH, TORSO_HEIGHT, Color.BLUE);
-    Section head = new BodySection(HEAD_WIDTH, HEAD_HEIGHT, Color.GREEN);
+
+    /*--------------------------------------------------------------------*
+     * Create graph components with width, height, and color
+     *--------------------------------------------------------------------*/
+
+    // Torso and head
+    Section torso = new BodySection(TORSO_WIDTH, TORSO_HEIGHT, Color.BLUE, "torso");
+    Section head = new BodySection(HEAD_WIDTH, HEAD_HEIGHT, Color.GREEN, "head");
 
     // Left arm
-    Section leftHand = new BodySection(ARM_WIDTH, ARM_HEIGHT/2, Color.BLACK);
-    Section leftLowerArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK);
-    Section leftUpperArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK);
+    Section leftHand = new BodySection(ARM_WIDTH, ARM_HEIGHT/2, Color.BLACK, "leftHand");
+    Section leftLowerArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK, "leftLowerArm");
+    Section leftUpperArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK, "leftUpperArm");
 
     // Right arm
-    Section rightHand = new BodySection(ARM_WIDTH, ARM_HEIGHT/2, Color.BLACK);
-    Section rightLowerArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK);
-    Section rightUpperArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK);
+    Section rightHand = new BodySection(ARM_WIDTH, ARM_HEIGHT/2, Color.BLACK, "rightHand");
+    Section rightLowerArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK, "rightLowerArm");
+    Section rightUpperArm = new BodySection(ARM_WIDTH, ARM_HEIGHT, Color.BLACK, "rightUpperArm");
 
     // Left Leg
-    Section leftFoot = new BodySection(50, 30, Color.BLACK);
-    Section leftLowerLeg = new BodySection(ARM_WIDTH, 50, Color.BLACK);
-    Section leftUpperLeg = new BodySection(50, 40, Color.BLACK);
+    Section leftFoot = new BodySection(LEG_WIDTH, LEG_HEIGHT/2, Color.BLACK, "leftFoot");
+    Section leftLowerLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.BLACK, "leftLowerLeg");
+    Section leftUpperLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.BLACK, "leftUpperLeg");
 
     // Right Leg
-    Section rightFoot = new BodySection(50, 30, Color.BLACK);
-    Section rightLowerLeg = new BodySection(ARM_WIDTH, 50, Color.BLACK);
-    Section rightUpperLeg = new BodySection(50, 40, Color.BLACK);
+    Section rightFoot = new BodySection(LEG_WIDTH, LEG_HEIGHT/2, Color.GREEN, "rightFoot");
+    Section rightLowerLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.GREEN, "rightLowerLeg");
+    Section rightUpperLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.GREEN, "rightUpperLeg");
 
     /*--------------------------------------------------------------------*
      * Define them based on relative, successive transformations
@@ -65,7 +72,8 @@ public class Main {
     leftHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
 
     // left leg
-
+    leftUpperLeg.transform(AffineTransform.getTranslateInstance(0, TORSO_HEIGHT));
+    leftLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
     // right arm
     rightUpperArm.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH, TORSO_HEIGHT/5));
@@ -73,6 +81,8 @@ public class Main {
     rightHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
 
     // right leg
+    rightUpperLeg.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH - LEG_WIDTH, TORSO_HEIGHT));
+    rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
     torso.transform(AffineTransform.getTranslateInstance(100, 100));
     head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH)/2, -10));
@@ -95,7 +105,7 @@ public class Main {
 
     // right leg
     rightLowerLeg.addChild(rightFoot);
-    leftUpperLeg.addChild(leftLowerLeg);
+    rightUpperLeg.addChild(rightLowerLeg);
 
     // build scene graph
     torso.addChild(head);
@@ -106,7 +116,12 @@ public class Main {
 
     // return root of the tree
     return torso;
+
   }
+
+  /*--------------------------------------------------------------------*
+   * Doll Constants
+   *--------------------------------------------------------------------*/
 
   // Scene graph node widths and heights
   public static final int HEAD_WIDTH = 10;
@@ -115,5 +130,7 @@ public class Main {
   public static final int TORSO_HEIGHT = 100;
   public static final int ARM_WIDTH = 50;
   public static final int ARM_HEIGHT = 50;
-  public static final int HAND_HEIGHT = 50;
+  public static final int LEG_WIDTH = 50;
+  public static final int LEG_HEIGHT = 50;
+
 }

@@ -7,22 +7,22 @@ import java.awt.geom.Point2D;
 import java.util.Vector;
 
 public abstract class Section {
-  protected enum InteractionMode {
-    IDLE,
-    DRAGGING,
-    SCALING,
-    ROTATING
-  }
+  protected enum InteractionMode { IDLE, DRAGGING, SCALING, ROTATING }
 
+  private boolean isLeg = false;
+  private final String name;
   private Section parent = null;                                         // Pointer to our parent
   private Vector<Section> children = new Vector<Section>();               // Holds all of our children
   private AffineTransform transform = new AffineTransform();            // Our transformation matrix
   protected Point2D lastPoint = null;                                   // Last mouse point
   protected InteractionMode interactionMode = InteractionMode.IDLE;     // current state
 
-  public Section() { }
+  public Section(String name) {
+    this.name = name;
+  }
 
-  public Section(Section parent) {
+  public Section(Section parent, String name) {
+    this.name = name;
     if (parent != null) {
       parent.addChild(this);
     }
@@ -40,20 +40,17 @@ public abstract class Section {
   private void setParent(Section s) {
     this.parent = s;
   }
+  public String getName() { return this.name; }
 
   public abstract boolean pointInside(Point2D p);
 
-  /**
-   * Handles a mouse down event, assuming that the event has already
-   * been tested to ensure the mouse point is within our sprite.
-   */
   protected void handleMouseDownEvent(MouseEvent e) {
     lastPoint = e.getPoint();
 
     if (parent == null) {
       interactionMode = InteractionMode.DRAGGING;
     } else {
-      interactionMode = InteractionMode.IDLE;
+      interactionMode = InteractionMode.ROTATING;
     }
   }
 
@@ -61,30 +58,43 @@ public abstract class Section {
     Point2D oldPoint = lastPoint;
     Point2D newPoint = e.getPoint();
 
+    //System.out.println("old: " + oldPoint.getX() + " | " + oldPoint.getY() + " new: " + newPoint.getX() + " | " + newPoint.getY());
+
+    double x_diff, y_diff, theta = 0.0, lastAngle = 0.0;
+    x_diff = newPoint.getX() - oldPoint.getX();
+    y_diff = newPoint.getY() - oldPoint.getY();
+
+
     switch (interactionMode) {
       case IDLE:
-      ; // no-op (shouldn't get here)
       break;
     case DRAGGING:
-      double x_diff = newPoint.getX() - oldPoint.getX();
-      double y_diff = newPoint.getY() - oldPoint.getY();
       transform.translate(x_diff, y_diff);
       break;
     case ROTATING:
-      ; // Provide rotation code here
-      break;
+      //System.out.println(getLocalTransform().toString());
+      System.out.println(getSectionHit(e).getName());
+
+      // subtract with axis of rotation! Not last point!
+      theta = Math.atan2(y_diff, x_diff);
+      //System.out.println("x: " + x_diff + " | y: " + y_diff + " | theta: " + theta);
+
+      transform.rotate((theta - lastAngle)/36);
+      lastAngle = theta - lastAngle;
+
+      if (!isLeg) {
+        break;
+      }
     case SCALING:
-      ; // Provide scaling code here
+      System.out.println("leg");
       break;
     }
 
-    // Save our last point, if it's needed next time around
     lastPoint = e.getPoint();
   }
 
   protected void handleMouseUp(MouseEvent e) {
     interactionMode = InteractionMode.IDLE;
-    // Do any other interaction handling necessary here
   }
 
   /**

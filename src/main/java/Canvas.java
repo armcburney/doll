@@ -1,3 +1,7 @@
+/**
+ * This code was mostly taken from the sample code provided
+ */
+
 package ca.andrewmcburney.cs349.a3;
 
 import java.awt.Color;

@@ -22,8 +22,8 @@ public class BodySection extends Section {
    * Creates a rectangle based at the origin with the specified
    * width, height, and color
    */
-  public BodySection(int width, int height, Color color) {
-    super();
+  public BodySection(int width, int height, Color color, String name) {
+    super(name);
     this.initialize(width, height);
     this.color = color;
   }
@@ -32,8 +32,8 @@ public class BodySection extends Section {
    * Creates a rectangle based at the origin with the specified
    * width, height, and parent
    */
-  public BodySection(int width, int height, Section parentSection) {
-    super(parentSection);
+  public BodySection(int width, int height, Section parentSection, String name) {
+    super(parentSection, name);
     this.initialize(width, height);
   }
 
