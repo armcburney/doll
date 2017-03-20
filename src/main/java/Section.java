@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 
-public abstract class Sprite {
+public abstract class Section {
   protected enum InteractionMode {
     IDLE,
     DRAGGING,
@@ -14,36 +14,33 @@ public abstract class Sprite {
     ROTATING
   }
 
-  private Sprite parent = null;                                         // Pointer to our parent
-  private Vector<Sprite> children = new Vector<Sprite>();               // Holds all of our children
+  private Section parent = null;                                         // Pointer to our parent
+  private Vector<Section> children = new Vector<Section>();               // Holds all of our children
   private AffineTransform transform = new AffineTransform();            // Our transformation matrix
   protected Point2D lastPoint = null;                                   // Last mouse point
   protected InteractionMode interactionMode = InteractionMode.IDLE;     // current state
 
-  public Sprite() { }
+  public Section() { }
 
-  public Sprite(Sprite parent) {
+  public Section(Section parent) {
     if (parent != null) {
       parent.addChild(this);
     }
   }
 
-  public void addChild(Sprite s) {
+  public void addChild(Section s) {
     children.add(s);
     s.setParent(this);
   }
 
-  public Sprite getParent() {
+  public Section getParent() {
     return parent;
   }
 
-  private void setParent(Sprite s) {
+  private void setParent(Section s) {
     this.parent = s;
   }
 
-  /**
-   * Test whether a point, in world coordinates, is within our sprite.
-   */
   public abstract boolean pointInside(Point2D p);
 
   /**
@@ -53,21 +50,13 @@ public abstract class Sprite {
   protected void handleMouseDownEvent(MouseEvent e) {
     lastPoint = e.getPoint();
 
-    if (e.getButton() == MouseEvent.BUTTON1) {
+    if (parent == null) {
       interactionMode = InteractionMode.DRAGGING;
+    } else {
+      interactionMode = InteractionMode.IDLE;
     }
-
-    // Handle rotation, scaling mode depending on input
   }
 
-  /**
-   * Handle mouse drag event, with the assumption that we have already
-   * been "selected" as the sprite to interact with.
-   * This is a very simple method that only works because we
-   * assume that the coordinate system has not been modified
-   * by scales or rotations. You will need to modify this method
-   * appropriately so it can handle arbitrary transformations.
-   */
   protected void handleMouseDragEvent(MouseEvent e) {
     Point2D oldPoint = lastPoint;
     Point2D newPoint = e.getPoint();
@@ -105,16 +94,19 @@ public abstract class Sprite {
    *
    * @return The sprite that was hit, or null if no sprite was hit
    */
-  public Sprite getSpriteHit(MouseEvent e) {
-    for (Sprite sprite : children) {
-        Sprite s = sprite.getSpriteHit(e);
+  public Section getSectionHit(MouseEvent e) {
+    for (Section sprite : children) {
+        Section s = sprite.getSectionHit(e);
+
         if (s != null) {
             return s;
         }
     }
+
     if (this.pointInside(e.getPoint())) {
         return this;
     }
+
     return null;
   }
 
@@ -128,34 +120,24 @@ public abstract class Sprite {
    */
   public AffineTransform getFullTransform() {
     AffineTransform returnTransform = new AffineTransform();
-    Sprite curSprite = this;
+    Section curSection = this;
 
-    while (curSprite != null) {
-      returnTransform.preConcatenate(curSprite.getLocalTransform());
-      curSprite = curSprite.getParent();
+    while (curSection != null) {
+      returnTransform.preConcatenate(curSection.getLocalTransform());
+      curSection = curSection.getParent();
     }
 
     return returnTransform;
   }
 
-  /**
-   * Returns our local transform
-   */
   public AffineTransform getLocalTransform() {
     return (AffineTransform)transform.clone();
   }
 
-  /**
-   * Performs an arbitrary transform on this sprite
-   */
   public void transform(AffineTransform t) {
     transform.concatenate(t);
   }
 
-  /**
-   * Draws the sprite. This method will call drawSprite after
-   * the transform has been set up for this sprite.
-   */
   public void draw(Graphics2D g) {
     AffineTransform oldTransform = g.getTransform();
 
@@ -163,21 +145,16 @@ public abstract class Sprite {
     g.setTransform(this.getFullTransform());
 
     // Draw the sprite (delegated to sub-classes)
-    this.drawSprite(g);
+    this.drawSection(g);
 
     // Restore original transform
     g.setTransform(oldTransform);
 
     // Draw children
-    for (Sprite sprite : children) {
+    for (Section sprite : children) {
       sprite.draw(g);
     }
   }
 
-  /**
-   * The method that actually does the sprite drawing. This method
-   * is called after the transform has been set up in the draw() method.
-   * Sub-classes should override this method to perform the drawing.
-   */
-  protected abstract void drawSprite(Graphics2D g);
+  protected abstract void drawSection(Graphics2D g);
 }

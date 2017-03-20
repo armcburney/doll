@@ -14,7 +14,7 @@ import java.awt.geom.Rectangle2D;
 /**
  *
  */
-public class RectangleSprite extends Sprite {
+public class BodySection extends Section {
   private Rectangle2D rect = null;
   private Color color;
 
@@ -22,7 +22,7 @@ public class RectangleSprite extends Sprite {
    * Creates a rectangle based at the origin with the specified
    * width, height, and color
    */
-  public RectangleSprite(int width, int height, Color color) {
+  public BodySection(int width, int height, Color color) {
     super();
     this.initialize(width, height);
     this.color = color;
@@ -32,8 +32,8 @@ public class RectangleSprite extends Sprite {
    * Creates a rectangle based at the origin with the specified
    * width, height, and parent
    */
-  public RectangleSprite(int width, int height, Sprite parentSprite) {
-    super(parentSprite);
+  public BodySection(int width, int height, Section parentSection) {
+    super(parentSection);
     this.initialize(width, height);
   }
 
@@ -59,12 +59,12 @@ public class RectangleSprite extends Sprite {
     return rect.contains(newPoint);
   }
 
-  protected void drawSprite(Graphics2D g) {
+  protected void drawSection(Graphics2D g) {
     g.setColor(color);
     g.draw(rect);
   }
 
   public String toString() {
-    return "RectangleSprite: " + rect;
+    return "BodySection: " + rect;
   }
 }

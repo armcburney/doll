@@ -19,8 +19,8 @@ import javax.swing.JPanel;
  * A canvas that draws sprites.
  */
 public class Canvas extends JPanel {
-  private Vector<Sprite> sprites = new Vector<Sprite>();
-  private Sprite interactiveSprite = null;
+  private Vector<Section> sprites = new Vector<Section>();
+  private Section interactiveSection = null;
 
   public Canvas() {
     this.addMouseListener(new MouseAdapter() {
@@ -44,11 +44,11 @@ public class Canvas extends JPanel {
    * Handle mouse press events
    */
   private void handleMousePress(java.awt.event.MouseEvent e) {
-    for (Sprite sprite : sprites) {
-      interactiveSprite = sprite.getSpriteHit(e);
+    for (Section sprite : sprites) {
+      interactiveSection = sprite.getSectionHit(e);
 
-      if (interactiveSprite != null) {
-        interactiveSprite.handleMouseDownEvent(e);
+      if (interactiveSection != null) {
+        interactiveSection.handleMouseDownEvent(e);
         break;
       }
     }
@@ -58,19 +58,19 @@ public class Canvas extends JPanel {
    * Handle mouse released events
    */
   private void handleMouseReleased(MouseEvent e) {
-    if (interactiveSprite != null) {
-      interactiveSprite.handleMouseUp(e);
+    if (interactiveSection != null) {
+      interactiveSection.handleMouseUp(e);
       repaint();
     }
-    interactiveSprite = null;
+    interactiveSection = null;
   }
 
   /**
    * Handle mouse dragged events
    */
   private void handleMouseDragged(MouseEvent e) {
-    if (interactiveSprite != null) {
-      interactiveSprite.handleMouseDragEvent(e);
+    if (interactiveSection != null) {
+      interactiveSection.handleMouseDragEvent(e);
       repaint();
     }
   }
@@ -78,7 +78,7 @@ public class Canvas extends JPanel {
   /**
    * Add a top-level sprite to the canvas
    */
-  public void addSprite(Sprite s) {
+  public void addSection(Section s) {
     sprites.add(s);
   }
 
@@ -90,7 +90,7 @@ public class Canvas extends JPanel {
     g.fillRect(0, 0, this.getWidth(), this.getHeight());
     g.setColor(Color.BLACK);
 
-    for (Sprite sprite : sprites) {
+    for (Section sprite : sprites) {
       sprite.draw((Graphics2D) g);
     }
   }
