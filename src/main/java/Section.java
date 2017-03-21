@@ -1,7 +1,5 @@
 package ca.andrewmcburney.cs349.a3;
 
-import javafx.scene.transform.NonInvertibleTransformException;
-
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -32,17 +30,6 @@ public abstract class Section {
 
     if (parent != null) {
       parent.addChild(this);
-    }
-  }
-
-  /*--------------------------------------------------------------------*
-   * Section Data
-   *--------------------------------------------------------------------*/
-
-  public void setSectionData(String name) {
-    switch (name) {
-    case "rightLowerLeg":
-    case "":
     }
   }
 
@@ -109,8 +96,7 @@ public abstract class Section {
         break;
       }
     case SCALING:
-      if (pointInside(newPoint)) {}
-      System.out.println("leg");
+      System.out.println("Implement scaling");
       break;
     }
 

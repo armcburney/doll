@@ -79,7 +79,6 @@ public class Main {
     // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
-    canvas.repaint();
 
     /*--------------------------------------------------------------------*
      * Action Listeners
@@ -119,6 +118,8 @@ public class Main {
         }
       }
     });
+
+    canvas.repaint();
   }
 
   private static void resetApp(Canvas canvas) {
