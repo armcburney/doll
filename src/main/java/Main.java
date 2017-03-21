@@ -124,13 +124,16 @@ public class Main {
    *--------------------------------------------------------------------*/
 
   // Scene graph node widths and heights
-  public static final int HEAD_WIDTH = 10;
-  public static final int HEAD_HEIGHT = 10;
-  public static final int TORSO_WIDTH = 100;
-  public static final int TORSO_HEIGHT = 100;
-  public static final int ARM_WIDTH = 50;
-  public static final int ARM_HEIGHT = 50;
-  public static final int LEG_WIDTH = 50;
-  public static final int LEG_HEIGHT = 50;
+  public static final double HEAD_WIDTH = 10.0;
+  public static final double HEAD_HEIGHT = 10.0;
+
+  public static final double TORSO_WIDTH = 100.0;
+  public static final double TORSO_HEIGHT = 100.0;
+
+  public static final double ARM_WIDTH = 50.0;
+  public static final double ARM_HEIGHT = 50.0;
+
+  public static final double LEG_WIDTH = 50.0;
+  public static final double LEG_HEIGHT = 50.0;
 
 }

@@ -1,5 +1,7 @@
 package ca.andrewmcburney.cs349.a3;
 
+import javafx.scene.transform.NonInvertibleTransformException;
+
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -11,11 +13,15 @@ public abstract class Section {
 
   private boolean isLeg = false;
   private final String name;
-  private Section parent = null;                                         // Pointer to our parent
-  private Vector<Section> children = new Vector<Section>();               // Holds all of our children
-  private AffineTransform transform = new AffineTransform();            // Our transformation matrix
-  protected Point2D lastPoint = null;                                   // Last mouse point
-  protected InteractionMode interactionMode = InteractionMode.IDLE;     // current state
+  private Section parent = null;
+  private Vector<Section> children = new Vector<Section>();
+  private AffineTransform transform = new AffineTransform();
+  protected Point2D lastPoint = null;
+  protected InteractionMode interactionMode = InteractionMode.IDLE;
+
+  /*--------------------------------------------------------------------*
+   * Constructors
+   *--------------------------------------------------------------------*/
 
   public Section(String name) {
     this.name = name;
@@ -23,6 +29,7 @@ public abstract class Section {
 
   public Section(Section parent, String name) {
     this.name = name;
+
     if (parent != null) {
       parent.addChild(this);
     }
@@ -33,10 +40,13 @@ public abstract class Section {
     s.setParent(this);
   }
 
+  /*--------------------------------------------------------------------*
+   * Children and parent code
+   *--------------------------------------------------------------------*/
+
   public Section getParent() {
     return parent;
   }
-
   private void setParent(Section s) {
     this.parent = s;
   }
@@ -54,16 +64,17 @@ public abstract class Section {
     }
   }
 
+  /*--------------------------------------------------------------------*
+   * Mouse drag code
+   *--------------------------------------------------------------------*/
+
   protected void handleMouseDragEvent(MouseEvent e) {
     Point2D oldPoint = lastPoint;
     Point2D newPoint = e.getPoint();
 
-    //System.out.println("old: " + oldPoint.getX() + " | " + oldPoint.getY() + " new: " + newPoint.getX() + " | " + newPoint.getY());
-
-    double x_diff, y_diff, theta = 0.0, lastAngle = 0.0;
+    double x_diff, y_diff, theta = 0.0;
     x_diff = newPoint.getX() - oldPoint.getX();
     y_diff = newPoint.getY() - oldPoint.getY();
-
 
     switch (interactionMode) {
       case IDLE:
@@ -72,20 +83,23 @@ public abstract class Section {
       transform.translate(x_diff, y_diff);
       break;
     case ROTATING:
-      //System.out.println(getLocalTransform().toString());
-      System.out.println(getSectionHit(e).getName());
+      try {
+        Point2D local = getFullTransform().inverseTransform(newPoint, null);
+        theta = Math.atan2(local.getX(), local.getY());
 
-      // subtract with axis of rotation! Not last point!
-      theta = Math.atan2(y_diff, x_diff);
-      //System.out.println("x: " + x_diff + " | y: " + y_diff + " | theta: " + theta);
+        System.out.println(local);
+        System.out.println(theta);
+        transform.rotate(-theta);
 
-      transform.rotate((theta - lastAngle)/36);
-      lastAngle = theta - lastAngle;
-
+      } catch (Exception e1) {
+         System.out.println("oops");
+      }
+      // scale if leg component
       if (!isLeg) {
         break;
       }
     case SCALING:
+      if (pointInside(newPoint)) {}
       System.out.println("leg");
       break;
     }
@@ -97,37 +111,24 @@ public abstract class Section {
     interactionMode = InteractionMode.IDLE;
   }
 
-  /**
-   * Locates the sprite that was hit by the given event.
-   * You *may* need to modify this method, depending on
-   * how you modify other parts of the class.
-   *
-   * @return The sprite that was hit, or null if no sprite was hit
-   */
   public Section getSectionHit(MouseEvent e) {
     for (Section sprite : children) {
-        Section s = sprite.getSectionHit(e);
+      Section s = sprite.getSectionHit(e);
 
-        if (s != null) {
-            return s;
-        }
+      if (s != null) { return s; }
     }
 
     if (this.pointInside(e.getPoint())) {
-        return this;
+      return this;
     }
 
     return null;
   }
 
-  /*
-   * Important note: How transforms are handled here are only an example. You will
-   * likely need to modify this code for it to work for your assignment.
-   */
+  /*--------------------------------------------------------------------*
+   * Affine Transforms
+   *--------------------------------------------------------------------*/
 
-  /**
-   * Returns the full transform to this object from the root
-   */
   public AffineTransform getFullTransform() {
     AffineTransform returnTransform = new AffineTransform();
     Section curSection = this;

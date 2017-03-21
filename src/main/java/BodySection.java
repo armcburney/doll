@@ -11,9 +11,6 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- */
 public class BodySection extends Section {
   private Rectangle2D rect = null;
   private Color color;
@@ -22,7 +19,7 @@ public class BodySection extends Section {
    * Creates a rectangle based at the origin with the specified
    * width, height, and color
    */
-  public BodySection(int width, int height, Color color, String name) {
+  public BodySection(double width, double height, Color color, String name) {
     super(name);
     this.initialize(width, height);
     this.color = color;
@@ -32,13 +29,13 @@ public class BodySection extends Section {
    * Creates a rectangle based at the origin with the specified
    * width, height, and parent
    */
-  public BodySection(int width, int height, Section parentSection, String name) {
+  public BodySection(double width, double height, Section parentSection, String name) {
     super(parentSection, name);
     this.initialize(width, height);
   }
 
-  private void initialize(int width, int height) {
-    rect = new Rectangle2D.Double(0, 0, width, height);
+  private void initialize(double width, double height) {
+    rect = new Rectangle2D.Double(-width/2, 0, width, height);
   }
 
   /**
