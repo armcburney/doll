@@ -23,9 +23,11 @@ public class BodySection extends Section {
     super(name);
 
     if (name == "torso") {
-      this.initialize(width, height, -25, 50);
+      this.initialize(width, height, -25, 0, 50);
+    } else if (name == "head") {
+      this.initialize(width, height, -width/2, 0, 50);
     } else {
-      this.initialize(width, height, -width/2, 40);
+      this.initialize(width, height, -width/2, 0, 40);
     }
 
     this.color = color;
@@ -39,14 +41,16 @@ public class BodySection extends Section {
     super(parentSection, name);
 
     if (name == "torso") {
-      this.initialize(width, height, -25, 20);
+      this.initialize(width, height, -25, 0, 20);
+    } else if (name == "head") {
+      this.initialize(width, height, -width/2, 0, 50);
     } else {
-      this.initialize(width, height, -width/2, 40);
+      this.initialize(width, height, -width/2, 0, 40);
     }
   }
 
-  private void initialize(double width, double height, double pivot, double r) {
-    rect = new RoundRectangle2D.Double(pivot, 0, width, height, r, r);
+  private void initialize(double width, double height, double pivotX, double pivotY, double r) {
+    rect = new RoundRectangle2D.Double(pivotX, pivotY, width, height, r, r);
   }
 
   /**

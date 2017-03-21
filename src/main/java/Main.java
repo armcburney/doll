@@ -13,12 +13,10 @@ import javax.swing.*;
 public class Main {
 
   public static void main(String[] args) {
-    // Add scene graph to the canvas
-    Canvas canvas = new Canvas();
-    canvas.addSection(Main.makeSection());
-
     // Create a frame to hold scene graph
     JFrame frame = new JFrame();
+
+    // Set layout
     GridBagLayout gridBagLayout = new GridBagLayout();
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
 
@@ -58,47 +56,12 @@ public class Main {
     frame.getContentPane().add(topBar);
 
     /*--------------------------------------------------------------------*
-     * Action Listeners
+     * Canvas
      *--------------------------------------------------------------------*/
 
-    // Reset the paper doll
-    resetItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              canvas.resetCanvas();
-            }
-        });
-
-    // Exit the application
-    quitItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          quitApp(frame);
-        }
-      });
-
-    /*--------------------------------------------------------------------*
-     * Key Listener
-     *--------------------------------------------------------------------*/
-
-    frame.addKeyListener(new KeyListener() {
-        @Override
-        public void keyTyped(KeyEvent e) {}
-
-        @Override
-        public void keyReleased(KeyEvent e) {}
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-          if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_R)) {
-            canvas.resetCanvas();
-          } else if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_Q)) {
-            quitApp(frame);
-          }
-        }
-      });
-
-    /*--------------------------------------------------------------------*
-     * Other
-     *--------------------------------------------------------------------*/
+    // Add scene graph to the canvas
+    Canvas canvas = new Canvas();
+    canvas.addSection(Main.makeSection());
 
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.weighty = 1.0;
@@ -116,6 +79,45 @@ public class Main {
     // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
+
+    /*--------------------------------------------------------------------*
+     * Action Listeners
+     *--------------------------------------------------------------------*/
+
+    // Reset the paper doll
+    resetItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        canvas.resetCanvas();
+      }
+    });
+
+    // Exit the application
+    quitItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        quitApp(frame);
+      }
+    });
+
+    /*--------------------------------------------------------------------*
+     * Key Listener
+     *--------------------------------------------------------------------*/
+
+    frame.addKeyListener(new KeyListener() {
+      @Override
+      public void keyTyped(KeyEvent e) {}
+
+      @Override
+      public void keyReleased(KeyEvent e) {}
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_R)) {
+          canvas.resetCanvas();
+        } else if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_Q)) {
+          quitApp(frame);
+        }
+      }
+    });
   }
 
   private static void quitApp(JFrame frame) {
@@ -130,8 +132,8 @@ public class Main {
      *--------------------------------------------------------------------*/
 
     // Torso and head
-    Section torso = new BodySection(TORSO_WIDTH, TORSO_HEIGHT, Color.BLUE, "torso");
-    Section head = new BodySection(HEAD_WIDTH, HEAD_HEIGHT, Color.GREEN, "head");
+    Section torso = new BodySection(TORSO_WIDTH, TORSO_HEIGHT, Color.BLACK, "torso");
+    Section head = new BodySection(HEAD_WIDTH, HEAD_HEIGHT, Color.BLACK, "head");
 
     // Left arm
     Section leftHand = new BodySection(ARM_WIDTH, ARM_HEIGHT/2, Color.BLACK, "leftHand");
@@ -149,9 +151,9 @@ public class Main {
     Section leftUpperLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.BLACK, "leftUpperLeg");
 
     // Right Leg
-    Section rightFoot = new BodySection(LEG_WIDTH, LEG_HEIGHT/2, Color.GREEN, "rightFoot");
-    Section rightLowerLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.GREEN, "rightLowerLeg");
-    Section rightUpperLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.GREEN, "rightUpperLeg");
+    Section rightFoot = new BodySection(LEG_WIDTH, LEG_HEIGHT/2, Color.BLACK, "rightFoot");
+    Section rightLowerLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.BLACK, "rightLowerLeg");
+    Section rightUpperLeg = new BodySection(LEG_WIDTH, LEG_HEIGHT, Color.BLACK, "rightUpperLeg");
 
     /*--------------------------------------------------------------------*
      * Define them based on relative, successive transformations
@@ -160,27 +162,28 @@ public class Main {
     // left arm
     leftUpperArm.transform(AffineTransform.getTranslateInstance(-ARM_WIDTH, TORSO_HEIGHT/5));
     leftUpperArm.transform(AffineTransform.getRotateInstance(Math.PI/6));
-    leftLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
-    leftHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
+    leftLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT + PADDING/2));
+    leftHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT + PADDING/2));
 
     // left leg
     leftUpperLeg.transform(AffineTransform.getTranslateInstance(-PADDING, TORSO_HEIGHT + PADDING));
-    leftLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
-    leftFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
+    leftLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
+    leftFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
 
     // right arm
     rightUpperArm.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH, TORSO_HEIGHT/5));
     rightUpperArm.transform(AffineTransform.getRotateInstance(-Math.PI/6));
-    rightLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
-    rightHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
+    rightLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT + PADDING/2));
+    rightHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT + PADDING/2));
 
     // right leg
     rightUpperLeg.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH - LEG_WIDTH + PADDING, TORSO_HEIGHT + PADDING));
-    rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
-    rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
+    rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
+    rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
 
-    torso.transform(AffineTransform.getTranslateInstance(300, 300));
-    head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH)/2, -10));
+    torso.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH/2)/2, -PADDING));
+    head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH - 10)/2, -PADDING));
+    head.transform(AffineTransform.getRotateInstance(Math.PI));
 
     /*--------------------------------------------------------------------*
      * Create graph by nesting child components
@@ -219,8 +222,8 @@ public class Main {
    *--------------------------------------------------------------------*/
 
   // Scene graph node widths and heights
-  public static final double HEAD_WIDTH = 10.0;
-  public static final double HEAD_HEIGHT = 10.0;
+  public static final double HEAD_WIDTH = 35.0;
+  public static final double HEAD_HEIGHT = 35.0;
 
   public static final double TORSO_WIDTH = 100.0;
   public static final double TORSO_HEIGHT = 100.0;
