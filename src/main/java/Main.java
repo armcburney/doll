@@ -19,8 +19,10 @@ public class Main {
 
     // Create a frame to hold scene graph
     JFrame frame = new JFrame();
-    frame.getContentPane().add(canvas);
-    frame.getContentPane().setLayout(new GridLayout(1, 1));
+    GridBagLayout gridBagLayout = new GridBagLayout();
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+
+    frame.getContentPane().setLayout(gridBagLayout);
 
     /*--------------------------------------------------------------------*
      * TopBar
@@ -45,7 +47,15 @@ public class Main {
     topBar.setLayout(new FlowLayout(FlowLayout.LEFT));
     topBar.add(menuBar);
 
-    frame.getContentPane().add(topBar);;
+    // Grid bag constraints
+    gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 0;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagLayout.setConstraints(topBar, gridBagConstraints);
+
+    frame.getContentPane().add(topBar);
 
     /*--------------------------------------------------------------------*
      * Action Listeners
@@ -86,9 +96,22 @@ public class Main {
         }
       });
 
+    /*--------------------------------------------------------------------*
+     * Other
+     *--------------------------------------------------------------------*/
+
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagLayout.setConstraints(canvas, gridBagConstraints);
+
+    // Add canvas after menu bar
+    frame.getContentPane().add(canvas);
+
     // Set frame to not be resizable
-    frame.setMinimumSize(new Dimension(1280, 800));
-    frame.setMaximumSize(new Dimension(1280, 800));
+    frame.setMinimumSize(new Dimension(1000, 700));
+    frame.setMaximumSize(new Dimension(1000, 700));
 
     // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,9 +123,6 @@ public class Main {
     System.exit(0);
   }
 
-  /**
-   * Make sample scene graph for testing purposes.
-   */
   private static Section makeSection() {
 
     /*--------------------------------------------------------------------*
