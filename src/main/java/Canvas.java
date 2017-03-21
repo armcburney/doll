@@ -47,10 +47,8 @@ public class Canvas extends JPanel {
   /**
    * Reset the position and orientation of all sections
    */
-  public void resetCanvas() {
-    for (Section s : sections) {
-      //s.reset();
-    }
+  public void clearSections() {
+    this.sections = new Vector<Section>();
   }
 
   /**

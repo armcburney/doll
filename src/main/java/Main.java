@@ -32,11 +32,11 @@ public class Main {
     JMenuItem resetItem, quitItem;
 
     resetItem = new JMenuItem("Reset", KeyEvent.VK_T);
-    //--------
     quitItem = new JMenuItem("Quit", KeyEvent.VK_T);
 
     menu = new JMenu("File");
     menu.add(resetItem);
+    menu.addSeparator();
     menu.add(quitItem);
 
     menuBar = new JMenuBar();
@@ -79,6 +79,7 @@ public class Main {
     // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
+    canvas.repaint();
 
     /*--------------------------------------------------------------------*
      * Action Listeners
@@ -87,7 +88,7 @@ public class Main {
     // Reset the paper doll
     resetItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        canvas.resetCanvas();
+        resetApp(canvas);
       }
     });
 
@@ -112,12 +113,18 @@ public class Main {
       @Override
       public void keyPressed(KeyEvent e) {
         if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_R)) {
-          canvas.resetCanvas();
+          resetApp(canvas);
         } else if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_Q)) {
           quitApp(frame);
         }
       }
     });
+  }
+
+  private static void resetApp(Canvas canvas) {
+    canvas.clearSections();
+    canvas.addSection(Main.makeSection());
+    canvas.repaint();
   }
 
   private static void quitApp(JFrame frame) {
@@ -182,7 +189,7 @@ public class Main {
     rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
 
     // torso and head
-    torso.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH/2)/2, -PADDING));
+    torso.transform(AffineTransform.getTranslateInstance(X_OFFSET, Y_OFFSET));
     head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH - 10)/2, -PADDING));
     head.transform(AffineTransform.getRotateInstance(Math.PI));
 
@@ -236,5 +243,8 @@ public class Main {
   public static final double LEG_HEIGHT = 50.0;
 
   public static final double PADDING = 10.0;
+
+  public static final double X_OFFSET = 400.0;
+  public static final double Y_OFFSET = 200.0;
 
 }
