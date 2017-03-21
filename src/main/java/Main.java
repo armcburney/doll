@@ -61,6 +61,28 @@ public class Main {
     // Exit the application
     quitItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          quitApp(frame);
+        }
+      });
+
+    /*--------------------------------------------------------------------*
+     * Key Listener
+     *--------------------------------------------------------------------*/
+
+    frame.addKeyListener(new KeyListener() {
+        @Override
+        public void keyTyped(KeyEvent e) {}
+
+        @Override
+        public void keyReleased(KeyEvent e) {}
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+          if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_R)) {
+            canvas.resetCanvas();
+          } else if (((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) && (e.getKeyCode() == KeyEvent.VK_Q)) {
+            quitApp(frame);
+          }
         }
       });
 
@@ -71,6 +93,11 @@ public class Main {
     // Set close operation and set visible
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
+  }
+
+  private static void quitApp(JFrame frame) {
+    frame.dispose();
+    System.exit(0);
   }
 
   /**
