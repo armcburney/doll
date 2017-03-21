@@ -181,6 +181,7 @@ public class Main {
     rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
     rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT + PADDING/2));
 
+    // torso and head
     torso.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH/2)/2, -PADDING));
     head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH - 10)/2, -PADDING));
     head.transform(AffineTransform.getRotateInstance(Math.PI));
