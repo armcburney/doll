@@ -9,10 +9,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 
 public class BodySection extends Section {
-  private Rectangle2D rect = null;
+  private RoundRectangle2D rect = null;
   private Color color;
 
   /**
@@ -21,7 +21,13 @@ public class BodySection extends Section {
    */
   public BodySection(double width, double height, Color color, String name) {
     super(name);
-    this.initialize(width, height);
+
+    if (name == "torso") {
+      this.initialize(width, height, -25, 20);
+    } else {
+      this.initialize(width, height, -width/2, 40);
+    }
+
     this.color = color;
   }
 
@@ -31,11 +37,16 @@ public class BodySection extends Section {
    */
   public BodySection(double width, double height, Section parentSection, String name) {
     super(parentSection, name);
-    this.initialize(width, height);
+
+    if (name == "torso") {
+      this.initialize(width, height, -25, 20);
+    } else {
+      this.initialize(width, height, -width/2, 40);
+    }
   }
 
-  private void initialize(double width, double height) {
-    rect = new Rectangle2D.Double(-width/2, 0, width, height);
+  private void initialize(double width, double height, double pivot, double r) {
+    rect = new RoundRectangle2D.Double(pivot, 0, width, height, r, r);
   }
 
   /**

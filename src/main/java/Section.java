@@ -35,21 +35,34 @@ public abstract class Section {
     }
   }
 
-  public void addChild(Section s) {
-    children.add(s);
-    s.setParent(this);
+  /*--------------------------------------------------------------------*
+   * Section Data
+   *--------------------------------------------------------------------*/
+
+  public void setSectionData(String name) {
+    switch (name) {
+    case "rightLowerLeg":
+    case "":
+    }
   }
 
   /*--------------------------------------------------------------------*
    * Children and parent code
    *--------------------------------------------------------------------*/
 
+  public void addChild(Section s) {
+    children.add(s);
+    s.setParent(this);
+  }
+
   public Section getParent() {
     return parent;
   }
+
   private void setParent(Section s) {
     this.parent = s;
   }
+
   public String getName() { return this.name; }
 
   public abstract boolean pointInside(Point2D p);
@@ -77,7 +90,7 @@ public abstract class Section {
     y_diff = newPoint.getY() - oldPoint.getY();
 
     switch (interactionMode) {
-      case IDLE:
+    case IDLE:
       break;
     case DRAGGING:
       transform.translate(x_diff, y_diff);
@@ -86,14 +99,11 @@ public abstract class Section {
       try {
         Point2D local = getFullTransform().inverseTransform(newPoint, null);
         theta = Math.atan2(local.getX(), local.getY());
-
-        System.out.println(local);
-        System.out.println(theta);
         transform.rotate(-theta);
-
       } catch (Exception e1) {
          System.out.println("oops");
       }
+
       // scale if leg component
       if (!isLeg) {
         break;

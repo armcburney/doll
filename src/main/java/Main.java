@@ -74,6 +74,7 @@ public class Main {
     // left leg
     leftUpperLeg.transform(AffineTransform.getTranslateInstance(0, TORSO_HEIGHT));
     leftLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
+    leftFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
     // right arm
     rightUpperArm.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH, TORSO_HEIGHT/5));
@@ -83,8 +84,9 @@ public class Main {
     // right leg
     rightUpperLeg.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH - LEG_WIDTH, TORSO_HEIGHT));
     rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
+    rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
-    torso.transform(AffineTransform.getTranslateInstance(100, 100));
+    torso.transform(AffineTransform.getTranslateInstance(TORSO_HEIGHT + ARM_WIDTH/2, TORSO_HEIGHT));
     head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH)/2, -10));
 
     /*--------------------------------------------------------------------*
