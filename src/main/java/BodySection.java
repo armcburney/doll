@@ -23,7 +23,7 @@ public class BodySection extends Section {
     super(name);
 
     if (name == "torso") {
-      this.initialize(width, height, -25, 20);
+      this.initialize(width, height, -25, 50);
     } else {
       this.initialize(width, height, -width/2, 40);
     }

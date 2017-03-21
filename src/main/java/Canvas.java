@@ -20,10 +20,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- * A canvas that draws sprites.
+ * A canvas that draws sections.
  */
 public class Canvas extends JPanel {
-  private Vector<Section> sprites = new Vector<Section>();
+  private Vector<Section> sections = new Vector<Section>();
   private Section interactiveSection = null;
 
   public Canvas() {
@@ -45,11 +45,20 @@ public class Canvas extends JPanel {
   }
 
   /**
+   * Reset the position and orientation of all sections
+   */
+  public void resetCanvas() {
+    for (Section s : sections) {
+      //s.reset();
+    }
+  }
+
+  /**
    * Handle mouse press events
    */
   private void handleMousePress(java.awt.event.MouseEvent e) {
-    for (Section sprite : sprites) {
-      interactiveSection = sprite.getSectionHit(e);
+    for (Section section : sections) {
+      interactiveSection = section.getSectionHit(e);
 
       if (interactiveSection != null) {
         interactiveSection.handleMouseDownEvent(e);
@@ -80,10 +89,10 @@ public class Canvas extends JPanel {
   }
 
   /**
-   * Add a top-level sprite to the canvas
+   * Add a top-level section to the canvas
    */
   public void addSection(Section s) {
-    sprites.add(s);
+    sections.add(s);
   }
 
   /**
@@ -94,8 +103,8 @@ public class Canvas extends JPanel {
     g.fillRect(0, 0, this.getWidth(), this.getHeight());
     g.setColor(Color.BLACK);
 
-    for (Section sprite : sprites) {
-      sprite.draw((Graphics2D) g);
+    for (Section section : sections) {
+      section.draw((Graphics2D) g);
     }
   }
 }

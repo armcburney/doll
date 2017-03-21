@@ -5,8 +5,10 @@
 package ca.andrewmcburney.cs349.a3;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Main {
 
@@ -19,6 +21,48 @@ public class Main {
     JFrame frame = new JFrame();
     frame.getContentPane().add(canvas);
     frame.getContentPane().setLayout(new GridLayout(1, 1));
+
+    /*--------------------------------------------------------------------*
+     * TopBar
+     *--------------------------------------------------------------------*/
+
+    JPanel topBar = new JPanel();
+    JMenu menu;
+    JMenuBar menuBar;
+    JMenuItem resetItem, quitItem;
+
+    resetItem = new JMenuItem("Reset", KeyEvent.VK_T);
+    //--------
+    quitItem = new JMenuItem("Quit", KeyEvent.VK_T);
+
+    menu = new JMenu("File");
+    menu.add(resetItem);
+    menu.add(quitItem);
+
+    menuBar = new JMenuBar();
+    menuBar.add(menu);
+
+    topBar.setLayout(new FlowLayout(FlowLayout.LEFT));
+    topBar.add(menuBar);
+
+    frame.getContentPane().add(topBar);;
+
+    /*--------------------------------------------------------------------*
+     * Action Listeners
+     *--------------------------------------------------------------------*/
+
+    // Reset the paper doll
+    resetItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              canvas.resetCanvas();
+            }
+        });
+
+    // Exit the application
+    quitItem.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        }
+      });
 
     // Set frame to not be resizable
     frame.setMinimumSize(new Dimension(1280, 800));
@@ -68,25 +112,27 @@ public class Main {
 
     // left arm
     leftUpperArm.transform(AffineTransform.getTranslateInstance(-ARM_WIDTH, TORSO_HEIGHT/5));
+    leftUpperArm.transform(AffineTransform.getRotateInstance(Math.PI/6));
     leftLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
     leftHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
 
     // left leg
-    leftUpperLeg.transform(AffineTransform.getTranslateInstance(0, TORSO_HEIGHT));
+    leftUpperLeg.transform(AffineTransform.getTranslateInstance(-PADDING, TORSO_HEIGHT + PADDING));
     leftLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
     leftFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
     // right arm
     rightUpperArm.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH, TORSO_HEIGHT/5));
+    rightUpperArm.transform(AffineTransform.getRotateInstance(-Math.PI/6));
     rightLowerArm.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
     rightHand.transform(AffineTransform.getTranslateInstance(0, ARM_HEIGHT));
 
     // right leg
-    rightUpperLeg.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH - LEG_WIDTH, TORSO_HEIGHT));
+    rightUpperLeg.transform(AffineTransform.getTranslateInstance(TORSO_WIDTH - LEG_WIDTH + PADDING, TORSO_HEIGHT + PADDING));
     rightLowerLeg.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
     rightFoot.transform(AffineTransform.getTranslateInstance(0, LEG_HEIGHT));
 
-    torso.transform(AffineTransform.getTranslateInstance(TORSO_HEIGHT + ARM_WIDTH/2, TORSO_HEIGHT));
+    torso.transform(AffineTransform.getTranslateInstance(300, 300));
     head.transform(AffineTransform.getTranslateInstance((TORSO_WIDTH - HEAD_WIDTH)/2, -10));
 
     /*--------------------------------------------------------------------*
@@ -137,5 +183,7 @@ public class Main {
 
   public static final double LEG_WIDTH = 50.0;
   public static final double LEG_HEIGHT = 50.0;
+
+  public static final double PADDING = 10.0;
 
 }
